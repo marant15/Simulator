@@ -1,3 +1,5 @@
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -21,5 +23,14 @@ public class AutomataC {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public void charge(String path) {
+		Gson gson = new Gson();
+		try {
+			auto = gson.fromJson(new FileReader(path), Automata.class);
+		} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 }
