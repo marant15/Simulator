@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 
 public class Automata {
+	public String nombre;
 	public ArrayList<String> estados;
 	public ArrayList<Character> alfabetoE;
 	public ArrayList<Character> alfabetoP;
@@ -9,6 +10,7 @@ public class Automata {
 	public ArrayList<String> estadosf;
 	
 	public Automata() {
+		nombre = "";
 		estados = new ArrayList<String>();
 		alfabetoE = new ArrayList<Character>();
 		alfabetoP = new ArrayList<Character>();
