@@ -266,15 +266,6 @@ public class FrameMenu extends JFrame{
 		
 	}
 
-	public List<String> getTokens(String str) {
-		List<String> tokens = new ArrayList<>();
-		StringTokenizer tokenizer = new StringTokenizer(str, ",");
-		while (tokenizer.hasMoreElements()) {
-			tokens.add(tokenizer.nextToken());
-		}
-		return tokens;
-	}
-
 	public void start() {
 
 		buttonStates.addActionListener(new ActionListener(){  
@@ -594,18 +585,103 @@ public class FrameMenu extends JFrame{
 		
 		buttonDStates.addActionListener(new ActionListener(){  
 			public void actionPerformed(ActionEvent e){
+				if(states.size()<1){
+					JOptionPane.showMessageDialog(null, "TODAVIA NO HAY ESTADOS!");
+				}else{
+					states.remove(tfStates.getText());
+					if(initialState.equals(tfStates.getText())) {
+						initialState = "";
+					}
+					cbInitialState.removeItem(tfStates.getText());
+					cbFinalState.removeItem(tfStates.getText());
+					cbStates.removeItem(tfStates.getText());
+					cbNextState.removeItem(tfStates.getText());
+					finalStates.remove(tfStates.getText());
+					showStates.setText(print(states));
+					showInitialState.setText(print(finalStates));
+					showFinalStates.setText(print(finalStates));
+					
+					for (int i = 0; i < reglas.size(); i++) {
+						if(reglas.get(i).estadoi.equals(tfStates.getText())) {
+							reglas.remove(i);
+						}
+					}
+					
+					for (int i = 0; i < reglas.size(); i++) {
+						if(reglas.get(i).estadof.equals(tfStates.getText())) {
+							reglas.remove(i);
+						}
+					}
+					String text = "<html>"+ printRules() +"</html>";
+					showRules.setText(text);
+				}
 			}  
 		});
 		buttonDAlphabetIN.addActionListener(new ActionListener(){  
 			public void actionPerformed(ActionEvent e){
+				if(alphabetIN.size()<1){
+					JOptionPane.showMessageDialog(null, "TODAVIA NO HAY ALFABETO!");
+				}else{
+					for (int i = 0; i < alphabetIN.size(); i++) {
+						if((alphabetIN.get(i) == tfAlphabetIN.getText().charAt(0))) {
+							alphabetIN.remove(i);						
+							cbAlphabetIN.removeItem(tfAlphabetIN.getText().charAt(0));
+							break;
+						}
+					}
+					showAlphabetIn.setText(print(alphabetIN));
+					for (int i = 0; i < reglas.size(); i++) {
+						if(reglas.get(i).entrada == tfAlphabetIN.getText().charAt(0)) {
+							reglas.remove(i);
+						}
+					}
+					String text = "<html>"+ printRules() +"</html>";
+					showRules.setText(text);
+				}
 			}  
 		});
 		buttonDAlphabetStack.addActionListener(new ActionListener(){  
 			public void actionPerformed(ActionEvent e){
+				if(alphabetStack.size()<1){
+					JOptionPane.showMessageDialog(null, "TODAVIA NO HAY ALFABETO!");
+				}else{
+					for (int i = 0; i < alphabetStack.size(); i++) {
+						if((alphabetStack.get(i) == tfAlphabetStack.getText().charAt(0))) {
+							alphabetStack.remove(i);						
+							cbAlphabetStack.removeItem(tfAlphabetStack.getText().charAt(0));
+							break;
+						}
+					}
+					
+					showAlphabetStack.setText(print(alphabetStack));
+					for (int i = 0; i < reglas.size(); i++) {
+						if(reglas.get(i).tope == tfAlphabetStack.getText().charAt(0)) {
+							reglas.remove(i);
+						}
+					}
+					
+					for (int i = 0; i < reglas.size(); i++) {
+						char[] array = reglas.get(i).accion.toCharArray();
+						for (int j = 0; j < array.length; j++) {
+							if(array[j]==tfAlphabetStack.getText().charAt(0)) {
+								reglas.remove(i);
+								break;
+							}
+						}
+					}
+					String text = "<html>"+ printRules() +"</html>";
+					showRules.setText(text);
+				}
 			}  
 		});
 		buttonDFinalState.addActionListener(new ActionListener(){  
 			public void actionPerformed(ActionEvent e){
+				for (int i = 0; i < finalStates.size(); i++) {
+					if(finalStates.get(i).equals(cbFinalState.getSelectedItem())) {
+						finalStates.remove(i);
+					}
+				}
+				showFinalStates.setText(print(finalStates));
 			}  
 		});
 		buttonDRules.addActionListener(new ActionListener(){  
