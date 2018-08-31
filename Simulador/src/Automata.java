@@ -8,6 +8,7 @@ public class Automata {
 	public ArrayList<Regla> reglas;
 	public String estadoi;
 	public ArrayList<String> estadosf;
+	public char initialstack;
 	
 	public Automata() {
 		nombre = "";
@@ -17,15 +18,17 @@ public class Automata {
 		reglas = new ArrayList<Regla>();
 		estadoi = "";
 		estadosf = new ArrayList<String>();
+		initialstack = ' ';
 	}
 	
-	public Automata(ArrayList<String> est, ArrayList<Character> ae, ArrayList<Character> af, ArrayList<Regla> reg, String ei, ArrayList<String> ef) {
+	public Automata(ArrayList<String> est, ArrayList<Character> ae, ArrayList<Character> af, ArrayList<Regla> reg, String ei, ArrayList<String> ef, char inis) {
 		estados = est;
 		alfabetoE = ae;
 		alfabetoP = af;
 		reglas = reg;
 		estadoi = ei;
 		estadosf = ef;
+		initialstack = inis;
 	}
 	
 }

@@ -10,7 +10,7 @@ public class FrameMenu extends JFrame{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	Automata auto;
+	AutomataC auto;
 	ArrayList<Regla> reglas;
 	ArrayList<String> finalStates;
 	ArrayList<String> states;
@@ -62,6 +62,7 @@ public class FrameMenu extends JFrame{
 	JButton buttonDAlphabetStack;
 	JButton buttonDFinalState;
 	JButton buttonDRules;
+	JButton save;
 
 	JLabel labelWarnings;
 	JLabel labelStates;
@@ -84,7 +85,7 @@ public class FrameMenu extends JFrame{
 	public FrameMenu(FrameSimulator simul) {
 		initialState = "";
 		simulator = simul;
-		auto = new Automata();
+		auto = new AutomataC();
 		reglas = new ArrayList<Regla>();
 		finalStates =new ArrayList<String>();
 		states=new ArrayList<String>();
@@ -130,6 +131,8 @@ public class FrameMenu extends JFrame{
 		buttonDAlphabetStack = new JButton("Delete");
 		buttonDFinalState = new JButton("Delete");
 		buttonDRules = new JButton("Delete Rule");
+		
+		save = new JButton("save");
 		
 		labelWarnings = new JLabel("Warnings");
 		labelStates = new JLabel("States");
@@ -185,6 +188,8 @@ public class FrameMenu extends JFrame{
 		buttonDFinalState.setBounds(320, 130, 70, 20);
 		buttonDRules.setBounds(330,220,100,20);
 		
+		save.setBounds(10,300,100,20);
+		
 		labelWarnings.setBounds(210, 260, 150, 20);
 		labelStates.setBounds(10,10,100,20);
 		labelAlphabetIn.setBounds(10,40,100,20);
@@ -239,6 +244,7 @@ public class FrameMenu extends JFrame{
 		frame.add(buttonDFinalState);
 		frame.add(buttonDRules);
 		
+		frame.add(save);
 		
 		frame.add(labelWarnings);
 		frame.add(labelStates);
@@ -415,7 +421,7 @@ public class FrameMenu extends JFrame{
 		buttonSimulador.addActionListener(new ActionListener(){  
 			public void actionPerformed(ActionEvent e){
 				simulator.setvisible();
-				simulator.simulation(reglas, auto, initialState, ""+initialStack);
+				simulator.simulation(reglas, auto.auto, initialState, ""+initialStack);
 				
 			}  
 		});
@@ -612,6 +618,18 @@ public class FrameMenu extends JFrame{
 			public void actionPerformed(ActionEvent e){
 			}  
 		});
+		save.addActionListener(new ActionListener(){  
+			public void actionPerformed(ActionEvent e){
+				save();
+			}  
+		});
+	}
+	
+	public void save() {
+		Automata aux = new Automata(states,alphabetIN,alphabetStack,reglas,initialState,finalStates,initialStack.charAt(0));
+		aux.nombre = "mock1";
+		auto.auto = aux;
+		auto.save();
 	}
 	
 	public String printRules() {
