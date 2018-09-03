@@ -29,6 +29,7 @@ public class Automata {
 		estadoi = ei;
 		estadosf = ef;
 		initialstack = inis;
+		nombre = "";
 	}
 	
 }

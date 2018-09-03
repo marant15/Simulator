@@ -28,7 +28,7 @@ public class AutomataC {
 	public void charge(String path) {
 		Gson gson = new Gson();
 		try {
-			auto = gson.fromJson(new FileReader(path), Automata.class);
+			auto = gson.fromJson(new FileReader("saves/"+path+".json"), Automata.class);
 		} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
 			e.printStackTrace();
 		}

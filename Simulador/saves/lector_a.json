@@ -1,0 +1,1 @@
+{"nombre":"lector_a","estados":["leer"],"alfabetoE":["a"],"alfabetoP":["A"],"reglas":[{"estadoi":"leer","entrada":"a","estadof":"leer","tope":"Z","accion":"Z"}],"estadoi":"leer","estadosf":["leer"],"initialstack":"Z"}

@@ -1,5 +1,7 @@
 import javax.swing.*;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.TextField;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ public class FrameMenu extends JFrame{
 	TextField tfstackAction;
 	TextField tfInitialStack;
 	TextField editOP;
+	TextField tfnombre;
 
 	JComboBox cbInitialState;
 	JComboBox cbFinalState;
@@ -63,6 +66,7 @@ public class FrameMenu extends JFrame{
 	JButton buttonDFinalState;
 	JButton buttonDRules;
 	JButton save;
+	JButton charge;
 
 	JLabel labelWarnings;
 	JLabel labelStates;
@@ -101,14 +105,15 @@ public class FrameMenu extends JFrame{
 		tfstackAction = new TextField();
 		tfInitialStack = new TextField();
 		editOP = new TextField();
+		tfnombre = new TextField();
 		
 		cbInitialState = new JComboBox();
 		cbFinalState = new JComboBox();
-
 		cbStates = new JComboBox();
 		cbAlphabetIN = new JComboBox();
 		cbAlphabetStack = new JComboBox();
 		cbNextState = new JComboBox();
+		
 
 		buttonStates = new JButton("Add");
 		buttonAlphabetIN = new JButton("Add");
@@ -132,7 +137,8 @@ public class FrameMenu extends JFrame{
 		buttonDFinalState = new JButton("Delete");
 		buttonDRules = new JButton("Delete Rule");
 		
-		save = new JButton("save");
+		save = new JButton("Save");
+		charge = new JButton("Charge");
 		
 		labelWarnings = new JLabel("Warnings");
 		labelStates = new JLabel("States");
@@ -150,7 +156,6 @@ public class FrameMenu extends JFrame{
 		showInitialStack = new JLabel();
 		showRules = new JLabel();
 		
-
 		tfStates.setBounds(110, 10, 70, 20);
 		tfAlphabetIN.setBounds(110, 40, 20, 20);
 		tfAlphabetStack.setBounds(110, 70, 20, 20);
@@ -189,6 +194,8 @@ public class FrameMenu extends JFrame{
 		buttonDRules.setBounds(330,220,100,20);
 		
 		save.setBounds(10,300,100,20);
+		charge.setBounds(10,330,100,20);
+		tfnombre.setBounds(120, 300, 100, 20);
 		
 		labelWarnings.setBounds(210, 260, 150, 20);
 		labelStates.setBounds(10,10,100,20);
@@ -245,6 +252,8 @@ public class FrameMenu extends JFrame{
 		frame.add(buttonDRules);
 		
 		frame.add(save);
+		frame.add(charge);
+		frame.add(tfnombre);
 		
 		frame.add(labelWarnings);
 		frame.add(labelStates);
@@ -271,9 +280,39 @@ public class FrameMenu extends JFrame{
 		editPane.setVisible(false);
 		
 	}
-
+	
+	public void setComboBox() {
+		cbInitialState.removeAllItems();
+		cbFinalState.removeAllItems();
+		cbStates.removeAllItems();
+		cbAlphabetIN.removeAllItems();
+		cbAlphabetStack.removeAllItems();
+		cbNextState.removeAllItems();
+		for (int i = 0; i < states.size(); i++) {
+			cbInitialState.addItem(states.get(i));
+			cbFinalState.addItem(states.get(i));
+			cbStates.addItem(states.get(i));
+			cbNextState.addItem(states.get(i));
+		}
+		for (int i = 0; i < alphabetIN.size(); i++) {
+			cbAlphabetIN.addItem(alphabetIN.get(i));
+		}
+		cbAlphabetStack.addItem(initialStack);
+		for (int i = 0; i < alphabetStack.size(); i++) {
+			cbAlphabetStack.addItem(alphabetStack.get(i));
+		}
+	}
+	public void setTexts() {
+		showStates.setText(print(states));
+		showAlphabetIn.setText(print(alphabetIN));
+		showAlphabetStack.setText(print(alphabetStack));
+		showInitialState.setText(initialState);
+		showInitialStack.setText(""+initialStack);
+		showFinalStates.setText(print(finalStates));
+		String text = "<html>"+ printRules() +"</html>";
+		showRules.setText(text);
+	}
 	public void start() {
-
 		buttonStates.addActionListener(new ActionListener(){  
 			public void actionPerformed(ActionEvent e){
 				boolean isNot=true;
@@ -576,7 +615,8 @@ public class FrameMenu extends JFrame{
 					reglas.set(i, regla);
 				}
 				cbAlphabetStack.removeItem(initialStack);
-				cbAlphabetStack.addItem(tfAlphabetStack.getText().charAt(0));
+				System.out.println(tfInitialStack.getText());
+				cbAlphabetStack.addItem(tfInitialStack.getText().charAt(0));
 				initialStack = tfInitialStack.getText();
 				String text = "<html>"+ printRules() +"</html>";
 				showRules.setText(text);
@@ -699,13 +739,31 @@ public class FrameMenu extends JFrame{
 				save();
 			}  
 		});
+		charge.addActionListener(new ActionListener(){  
+			public void actionPerformed(ActionEvent e){
+				charge();
+			}  
+		});
 	}
 	
 	public void save() {
 		Automata aux = new Automata(states,alphabetIN,alphabetStack,reglas,initialState,finalStates,initialStack.charAt(0));
-		aux.nombre = "mock1";
+		aux.nombre = tfnombre.getText();
 		auto.auto = aux;
 		auto.save();
+	}
+	
+	public void charge() {
+		auto.charge(tfnombre.getText());
+		alphabetIN = auto.auto.alfabetoE;
+		states = auto.auto.estados;
+		alphabetStack= auto.auto.alfabetoP;
+		reglas= auto.auto.reglas;
+		initialState=auto.auto.estadoi;
+		finalStates= auto.auto.estadosf;
+		initialStack = "" + auto.auto.initialstack;
+		this.setComboBox();
+		this.setTexts();
 	}
 	
 	public String printRules() {
