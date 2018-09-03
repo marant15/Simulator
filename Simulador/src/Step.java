@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 public class Step {
 	String cinta;
@@ -5,7 +6,7 @@ public class Step {
 	String cintaL;
 	String regla;
 	String estado;
-	String pila;
+	ArrayList<String> pila;
 	public Step() {
 		
 	}

@@ -442,7 +442,12 @@ public class FrameMenu extends JFrame{
 				Character stackTop =(Character) cbAlphabetStack.getSelectedItem();
 				String fState = (String) cbNextState.getSelectedItem();
 				String action = tfstackAction.getText();
-				reglas.add(new Regla(iState,alpha,stackTop,fState,action));
+				//hacer para un n.
+				ArrayList<Character> elem = new ArrayList<Character>();
+				elem.add(stackTop);
+				ArrayList<String> elem2 = new ArrayList<String>();
+				elem2.add(action);
+				reglas.add(new Regla(iState,alpha,elem,fState,elem2));
 				String text = "<html>"+ printRules() +"</html>";
 				showRules.setText(text);
 			}  
@@ -451,7 +456,12 @@ public class FrameMenu extends JFrame{
 		buttonSimulador.addActionListener(new ActionListener(){  
 			public void actionPerformed(ActionEvent e){
 				simulator.setvisible();
-				simulator.simulation(reglas, auto.auto, initialState, ""+initialStack);
+				//hacer p[ara n
+				ArrayList<String> aux = new ArrayList<String>();
+				for (int i = 0; i < 1; i++) {
+					aux.add(""+initialStack);
+				}
+				simulator.simulation(reglas, auto.auto, initialState, aux);
 				
 			}  
 		});
@@ -567,21 +577,23 @@ public class FrameMenu extends JFrame{
 					}
 					showAlphabetStack.setText(print(alphabetStack));
 					for (int i = 0; i < reglas.size(); i++) {
-						if(reglas.get(i).tope == tfAlphabetStack.getText().charAt(0)) {
+						//hacer para n
+						for (int j = 0; j < 1; j++) {
+						if(reglas.get(i).tope.get(j) == tfAlphabetStack.getText().charAt(0)) {
 							Regla regla = reglas.get(i);
-							regla.tope = change.charAt(0);
+							regla.tope.set(j, change.charAt(0));
 							reglas.set(i, regla);
 						}
-						char[] array = reglas.get(i).accion.toCharArray();
-						for (int j = 0; j < array.length; j++) {
-							if(array[j]==tfAlphabetStack.getText().charAt(0)) {
-								array[j]=change.charAt(0);
+						char[] array = reglas.get(i).accion.get(j).toCharArray();
+						for (int k = 0; k < array.length; k++) {
+							if(array[k]==tfAlphabetStack.getText().charAt(0)) {
+								array[k]=change.charAt(0);
 							}
 						}
-						
 						Regla regla = reglas.get(i);
-						regla.accion = conect(array);
+						regla.accion.set(j, conect(array));
 						reglas.set(i, regla);
+						}
 					}
 					String text = "<html>"+ printRules() +"</html>";
 					showRules.setText(text);
@@ -599,20 +611,23 @@ public class FrameMenu extends JFrame{
 		buttonEInitialStack.addActionListener(new ActionListener(){  
 			public void actionPerformed(ActionEvent e){
 				for (int i = 0; i < reglas.size(); i++) {
-					if(reglas.get(i).tope == initialStack.charAt(0)) {
+					//hacer para n
+					for (int j = 0; j < 1; j++) {
+					if(reglas.get(i).tope.get(j) == initialStack.charAt(0)) {
 						Regla regla = reglas.get(i);
-						regla.tope = tfInitialStack.getText().charAt(0);
+						regla.tope.set(j, tfInitialStack.getText().charAt(0));
 						reglas.set(i, regla);
 					}
-					char[] array = reglas.get(i).accion.toCharArray();
-					for (int j = 0; j < array.length; j++) {
-						if(array[j]==initialStack.charAt(0)) {
-							array[j]=tfInitialStack.getText().charAt(0);
+					char[] array = reglas.get(i).accion.get(j).toCharArray();
+					for (int k = 0; k < array.length; k++) {
+						if(array[k]==initialStack.charAt(0)) {
+							array[k]=tfInitialStack.getText().charAt(0);
 						}
 					}
 					Regla regla = reglas.get(i);
-					regla.accion = conect(array);
+					regla.accion.set(j, conect(array));
 					reglas.set(i, regla);
+					}
 				}
 				cbAlphabetStack.removeItem(initialStack);
 				System.out.println(tfInitialStack.getText());
@@ -701,19 +716,28 @@ public class FrameMenu extends JFrame{
 					
 					showAlphabetStack.setText(print(alphabetStack));
 					for (int i = 0; i < reglas.size(); i++) {
-						if(reglas.get(i).tope == tfAlphabetStack.getText().charAt(0)) {
+						//hacer para n
+						for (int j = 0; j < 1; j++) {
+						if(reglas.get(i).tope.get(j) == tfAlphabetStack.getText().charAt(0)) {
 							reglas.remove(i);
+							break;
+						}
 						}
 					}
 					
 					for (int i = 0; i < reglas.size(); i++) {
-						char[] array = reglas.get(i).accion.toCharArray();
-						for (int j = 0; j < array.length; j++) {
-							if(array[j]==tfAlphabetStack.getText().charAt(0)) {
-								reglas.remove(i);
+						//hacer para n
+						boolean remover=false;
+						for (int j = 0; j < 1; j++) {
+						char[] array = reglas.get(i).accion.get(j).toCharArray();
+						for (int k = 0; k < array.length; k++) {
+							if(array[k]==tfAlphabetStack.getText().charAt(0)) {
+								remover = true;
 								break;
 							}
 						}
+						}
+						if(remover)reglas.remove(i);
 					}
 					String text = "<html>"+ printRules() +"</html>";
 					showRules.setText(text);
@@ -770,7 +794,16 @@ public class FrameMenu extends JFrame{
 		String aux="";
 		for (int i = 0; i < reglas.size(); i++) {
 			Regla regla = reglas.get(i);
-			aux = aux + regla.estadoi+","+regla.entrada+","+regla.tope+","+regla.estadof+","+regla.accion+"<br>";
+			aux = aux + regla.estadoi+","+regla.entrada;
+			//hacer para n
+			for (int j = 0; j < 1; j++) {
+				aux = aux +"," + regla.tope.get(j);
+			}
+			aux = aux +"," +regla.estadof;
+			for (int j = 0; j < 1; j++) {
+				aux = aux+"," +regla.accion.get(j);
+			}
+			aux = aux +"<br>";
 		}
 		return aux;
 	}

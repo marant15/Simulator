@@ -72,13 +72,14 @@ public class FrameSimulator {
 		frame.setVisible(false);
 	}
 	
-	public void simulation(ArrayList<Regla> reglas,Automata auto, String estadoI, String pila) {
+	public void simulation(ArrayList<Regla> reglas,Automata auto, String estadoI, ArrayList<String> pila) {
 		start.addActionListener(new ActionListener(){  
 			public void actionPerformed(ActionEvent e){
 				String palabra = tfWord.getText();
 				auto.reglas = reglas;
 				sim = new Simulator(auto,contenedor);
 				sim.cadena = palabra;
+				
 				
 				boolean estado = sim.verificar(palabra,pila,estadoI);
 				if(estado) {
@@ -103,6 +104,7 @@ public class FrameSimulator {
 	}
 	
 	public void showsteps() {
+		System.out.println(sim.steps.size());
 		for (int i = 0; i < sim.steps.size(); i++) {
 			contenedor.cinta.setText(sim.steps.get(i).cinta);
 			contenedor.cintaFL.setText(sim.steps.get(i).cintaFL);
@@ -113,11 +115,10 @@ public class FrameSimulator {
 				modelo.setValueAt("", j, 0);
 			}
 			int count = 1;
-			if(sim.steps.get(i).pila.length() > 12) count = 12;
-			else count = sim.steps.get(i).pila.length();
-			for (int j = 0; j < sim.steps.get(i).pila.length() && j <12; j++) {
-				System.out.println();
-				modelo.setValueAt(sim.steps.get(i).pila.charAt(sim.steps.get(i).pila.length()-1-j), 12-count+j, 0);
+			if(sim.steps.get(i).pila.get(0).length() > 12) count = 12;
+			else count = sim.steps.get(i).pila.get(0).length();
+			for (int j = 0; j < sim.steps.get(i).pila.get(0).length() && j <12; j++) {
+				modelo.setValueAt(sim.steps.get(i).pila.get(0).charAt(sim.steps.get(i).pila.get(0).length()-1-j), 12-count+j, 0);
 			}
 			
 			try {

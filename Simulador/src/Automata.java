@@ -9,6 +9,7 @@ public class Automata {
 	public String estadoi;
 	public ArrayList<String> estadosf;
 	public char initialstack;
+	public int numerop;
 	
 	public Automata() {
 		nombre = "";
@@ -19,6 +20,7 @@ public class Automata {
 		estadoi = "";
 		estadosf = new ArrayList<String>();
 		initialstack = ' ';
+		numerop=1;
 	}
 	
 	public Automata(ArrayList<String> est, ArrayList<Character> ae, ArrayList<Character> af, ArrayList<Regla> reg, String ei, ArrayList<String> ef, char inis) {
@@ -30,6 +32,7 @@ public class Automata {
 		estadosf = ef;
 		initialstack = inis;
 		nombre = "";
+		numerop=1;
 	}
 	
 }
