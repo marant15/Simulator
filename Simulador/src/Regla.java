@@ -13,4 +13,8 @@ public class Regla {
 		tope = t;
 		accion = a;
 	}
+	
+	public String toString() {
+		return "<"+estadoi+", "+entrada+", "+estadof+", "+tope+", "+accion+">";
+	}
 }

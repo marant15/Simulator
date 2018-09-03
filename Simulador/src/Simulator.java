@@ -1,15 +1,22 @@
+import java.util.ArrayList;
+
 //import java.util.Stack;
 
 public class Simulator {
 	public Automata automata;
-
-	public Simulator(Automata a) {
+	public String cadena;
+	public Container frame;
+	public ArrayList<Step> steps;
+	
+	public Simulator(Automata a, Container f) {
 		automata = a;
+		cadena = "";
+		frame = f;
+		steps = new ArrayList<Step>();
 	}
-
 	public boolean verificar(String ent, String pila, String esta) {
 		if (ent.length() == 0) {
-			if(pila.charAt(pila.length()-1) == 'Z')
+			if(pila.charAt(pila.length()-1) == 'Z' || automata.estadosf.contains(esta))
 				return true;
 			else
 				return false;
@@ -32,7 +39,7 @@ public class Simulator {
 				}
 				if (entrada == a) {
 					if (tope == pila.charAt(pila.length()-1)) {
-						if (verificar(newent, doaction(pila, accion), estadof))return true;
+						if (verificar(newent, doaction(pila, accion,automata.reglas.get(i),ent), estadof))return true;
 					}
 				}
 			}
@@ -40,7 +47,7 @@ public class Simulator {
 		return false;
 	}
 
-	public String doaction(String pila, String accion) {
+	public String doaction(String pila, String accion, Regla rule,String falta) {
 		if (accion.equals("-")) {
 			pila = pila.substring(0, pila.length()-1);
 		} else if (accion.length() >= 1) {
@@ -48,6 +55,15 @@ public class Simulator {
 				pila = pila + accion.charAt(accion.length() - 2 - i);
 			}
 		}
+		Step aux = new Step();
+		aux.cinta="cinta: " +cadena;
+		if(falta.length() >1)aux.cintaFL="falta leer: "+ falta.substring(1);
+		else aux.cintaFL =("falta leer: ");
+		aux.cintaL=("ya leido: " + cadena.substring(0, cadena.length()-falta.length()+1));
+		aux.regla=("regla usada: "+ rule.toString());
+		aux.estado=("estado actual: "+rule.estadof);
+		aux.pila = pila;
+		steps.add(aux);
 		return pila;
 	}
 
