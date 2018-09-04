@@ -4,6 +4,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 
+import javax.swing.JOptionPane;
+
 import com.google.gson.*;
 public class AutomataC {
 
@@ -12,10 +14,10 @@ public class AutomataC {
 		auto = new Automata();
 	}
 	
-	public void save() {
+	public void save(String path) {
 		Gson gson = new Gson();
 		try {
-			Writer www = new FileWriter("saves/"+auto.nombre+".json");
+			Writer www = new FileWriter(path);
 			gson.toJson(auto,www);
 			www.flush();
 			www.close();
@@ -25,12 +27,14 @@ public class AutomataC {
 		
 	}
 	
-	public void charge(String path) {
+	public boolean charge(String path) {
 		Gson gson = new Gson();
 		try {
-			auto = gson.fromJson(new FileReader("saves/"+path+".json"), Automata.class);
+			auto = gson.fromJson(new FileReader(path), Automata.class);
+			return true;
 		} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "archivo erroneo");
 		}
+		return false;
 	}
 }

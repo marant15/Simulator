@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 
 public class Automata {
-	public String nombre;
 	public ArrayList<String> estados;
 	public ArrayList<Character> alfabetoE;
 	public ArrayList<Character> alfabetoP;
@@ -12,7 +11,6 @@ public class Automata {
 	public int numerop;
 	
 	public Automata() {
-		nombre = "";
 		estados = new ArrayList<String>();
 		alfabetoE = new ArrayList<Character>();
 		alfabetoP = new ArrayList<Character>();
@@ -31,7 +29,6 @@ public class Automata {
 		estadoi = ei;
 		estadosf = ef;
 		initialstack = inis;
-		nombre = "";
 		numerop=1;
 	}
 	

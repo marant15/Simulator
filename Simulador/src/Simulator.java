@@ -17,7 +17,7 @@ public class Simulator {
 
 	public boolean verificar(String ent, ArrayList<String> pilas, String esta) {
 		if (ent.length() == 0) {
-			if (verificarpilas(pilas) || automata.estadosf.contains(esta))
+			if (verificarpilas(pilas) || verificarestadosf(esta))
 				return true;
 			else
 				return false;
@@ -29,9 +29,10 @@ public class Simulator {
 			char entrada = automata.reglas.get(i).entrada;
 			String estadof = automata.reglas.get(i).estadof;
 			if (esta.equals(estadoi)) {
-				if (entrada == '-') {
-					a = '-';
-					newent = ent;
+				if (entrada == '\u03BB') {
+					if(ent.equals("\u03BB")) newent = ent.substring(1);
+					else newent = ent;
+					a = '\u03BB';
 				} else {
 					a = ent.charAt(0);
 					newent = ent.substring(1);
@@ -45,6 +46,14 @@ public class Simulator {
 			}
 		}
 		return false;
+	}
+	
+	public boolean verificarestadosf(String esta) {
+		boolean ver = false;
+		for (int i = 0; i < automata.estadosf.size(); i++) {
+			ver = automata.estadosf.get(i).equals(esta);
+		}
+		return ver;
 	}
 
 	public boolean verificartopes(ArrayList<String> pilas, int regla) {
@@ -69,7 +78,7 @@ public class Simulator {
 
 	public ArrayList<String> doaction(ArrayList<String> pila, ArrayList<String> accion, Regla rule, String falta) {
 		for (int i = 0; i < pila.size(); i++) {
-			if (accion.get(i).equals("-")) {
+			if (accion.get(i).equals("\u03BB")) {
 				pila.set(i, pila.get(i).substring(0, pila.get(i).length() - 1));
 			} else if (accion.get(i).length() >= 1) {
 				for (int j = 0; j < accion.get(i).length() - 1; j++) {

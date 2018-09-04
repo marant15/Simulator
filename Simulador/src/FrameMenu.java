@@ -1,9 +1,11 @@
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.TextField;
 import java.awt.event.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -25,10 +27,10 @@ public class FrameMenu extends JFrame {
 	String initialStack;
 
 	FrameSimulator simulator;
-	
+
 	ArrayList<JComboBox> cbAlphabetStack;
 	ArrayList<TextField> tfstackAction;
-	
+
 	JFrame frame;
 	JOptionPane editPane;
 
@@ -37,7 +39,6 @@ public class FrameMenu extends JFrame {
 	TextField tfAlphabetStack;
 	TextField tfInitialStack;
 	TextField editOP;
-	TextField tfnombre;
 	TextField tfnpila;
 
 	JComboBox cbInitialState;
@@ -103,7 +104,7 @@ public class FrameMenu extends JFrame {
 		cbAlphabetStack = new ArrayList<JComboBox>();
 		alphabetStack = new ArrayList<Character>();
 		tfstackAction = new ArrayList<TextField>();
-		
+
 		editPane = new JOptionPane();
 
 		tfStates = new TextField();
@@ -114,7 +115,6 @@ public class FrameMenu extends JFrame {
 		}
 		tfInitialStack = new TextField();
 		editOP = new TextField();
-		tfnombre = new TextField();
 		tfnpila = new TextField();
 
 		cbInitialState = new JComboBox();
@@ -207,7 +207,6 @@ public class FrameMenu extends JFrame {
 
 		save.setBounds(10, 330, 100, 20);
 		charge.setBounds(10, 360, 100, 20);
-		tfnombre.setBounds(120, 330, 100, 20);
 
 		labelWarnings.setBounds(210, 290, 150, 20);
 		labelnpila.setBounds(10, 10, 100, 20);
@@ -226,7 +225,7 @@ public class FrameMenu extends JFrame {
 		showFinalStates.setBounds(400, 160, 200, 20);
 		showInitialStack.setBounds(400, 190, 40, 20);
 		showRules.setBounds(10, 320, 250, 310);
-		
+
 		addall();
 
 		editPane.add(editOP);
@@ -236,7 +235,7 @@ public class FrameMenu extends JFrame {
 		allfalse();
 
 	}
-	
+
 	public void addall() {
 		frame = new JFrame();
 		frame.add(tfStates);
@@ -277,7 +276,6 @@ public class FrameMenu extends JFrame {
 
 		frame.add(save);
 		frame.add(charge);
-		frame.add(tfnombre);
 
 		frame.add(labelWarnings);
 		frame.add(labelnpila);
@@ -306,6 +304,7 @@ public class FrameMenu extends JFrame {
 		cbFinalState.removeAllItems();
 		cbStates.removeAllItems();
 		cbAlphabetIN.removeAllItems();
+		cbAlphabetIN.addItem("\u03BB");
 		for (int i = 0; i < cbAlphabetStack.size(); i++) {
 			cbAlphabetStack.get(i).removeAllItems();
 		}
@@ -343,30 +342,32 @@ public class FrameMenu extends JFrame {
 	public void start() {
 		buttonStates.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				boolean isNot = true;
-				if (states.size() < 1) {
-					states.add(tfStates.getText());
-					cbInitialState.addItem(tfStates.getText());
-					cbFinalState.addItem(tfStates.getText());
-					cbStates.addItem(tfStates.getText());
-					cbNextState.addItem(tfStates.getText());
-					showStates.setText(print(states));
-				} else {
-					for (int i = 0; i < states.size(); i++) {
-						if (states.get(i).equals(tfStates.getText())) {
-							JOptionPane.showMessageDialog(null, "ESTADO EXISTENTE!");
-							isNot = false;
-							break;
-						}
-					}
-					if (isNot) {
+				if (!tfStates.getText().equals("")) {
+					boolean isNot = true;
+					if (states.size() < 1) {
 						states.add(tfStates.getText());
 						cbInitialState.addItem(tfStates.getText());
 						cbFinalState.addItem(tfStates.getText());
 						cbStates.addItem(tfStates.getText());
 						cbNextState.addItem(tfStates.getText());
-						labelWarnings.setText("");
 						showStates.setText(print(states));
+					} else {
+						for (int i = 0; i < states.size(); i++) {
+							if (states.get(i).equals(tfStates.getText())) {
+								JOptionPane.showMessageDialog(null, "ESTADO EXISTENTE!");
+								isNot = false;
+								break;
+							}
+						}
+						if (isNot) {
+							states.add(tfStates.getText());
+							cbInitialState.addItem(tfStates.getText());
+							cbFinalState.addItem(tfStates.getText());
+							cbStates.addItem(tfStates.getText());
+							cbNextState.addItem(tfStates.getText());
+							labelWarnings.setText("");
+							showStates.setText(print(states));
+						}
 					}
 				}
 			}
@@ -374,54 +375,60 @@ public class FrameMenu extends JFrame {
 
 		buttonAlphabetIN.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				boolean isNot = true;
-				if (alphabetIN.size() < 1) {
-					alphabetIN.add(tfAlphabetIN.getText().charAt(0));
-					cbAlphabetIN.addItem(tfAlphabetIN.getText().charAt(0));
-					showAlphabetIn.setText(print(alphabetIN));
-				} else {
-					for (int i = 0; i < alphabetIN.size(); i++) {
-						if (alphabetIN.get(i).toString().equals(tfAlphabetIN.getText())) {
-							JOptionPane.showMessageDialog(null, "YA ES PARTE DEL ALFABETO DE ENTRADA!");
-							isNot = false;
-							break;
-						}
-					}
-
-					if (isNot) {
+				try {
+					boolean isNot = true;
+					if (alphabetIN.size() < 1) {
 						alphabetIN.add(tfAlphabetIN.getText().charAt(0));
 						cbAlphabetIN.addItem(tfAlphabetIN.getText().charAt(0));
 						showAlphabetIn.setText(print(alphabetIN));
+					} else {
+						for (int i = 0; i < alphabetIN.size(); i++) {
+							if (alphabetIN.get(i).toString().equals(tfAlphabetIN.getText())) {
+								JOptionPane.showMessageDialog(null, "YA ES PARTE DEL ALFABETO DE ENTRADA!");
+								isNot = false;
+								break;
+							}
+						}
+
+						if (isNot) {
+							alphabetIN.add(tfAlphabetIN.getText().charAt(0));
+							cbAlphabetIN.addItem(tfAlphabetIN.getText().charAt(0));
+							showAlphabetIn.setText(print(alphabetIN));
+						}
 					}
+				} catch (Exception e1) {
 				}
 			}
 		});
 
 		buttonAlphabetStack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				boolean isNot = true;
-				if (alphabetStack.size() == 0) {
-					alphabetStack.add(tfAlphabetStack.getText().charAt(0));
-					for (int i = 0; i < cbAlphabetStack.size(); i++) {
-						cbAlphabetStack.get(i).addItem(tfAlphabetStack.getText().charAt(0));
-					}
-					showAlphabetStack.setText(print(alphabetStack));
-				} else {
-					for (int i = 0; i < alphabetStack.size(); i++) {
-						if (alphabetStack.get(i).toString().equals(tfAlphabetStack.getText())) {
-							JOptionPane.showMessageDialog(null, "YA ES PARTE DEL ALFABETO DE LA PILA!");
-							isNot = false;
-							break;
-						}
-					}
-
-					if (isNot) {
+				try {
+					boolean isNot = true;
+					if (alphabetStack.size() == 0) {
 						alphabetStack.add(tfAlphabetStack.getText().charAt(0));
 						for (int i = 0; i < cbAlphabetStack.size(); i++) {
 							cbAlphabetStack.get(i).addItem(tfAlphabetStack.getText().charAt(0));
 						}
 						showAlphabetStack.setText(print(alphabetStack));
+					} else {
+						for (int i = 0; i < alphabetStack.size(); i++) {
+							if (alphabetStack.get(i).toString().equals(tfAlphabetStack.getText())) {
+								JOptionPane.showMessageDialog(null, "YA ES PARTE DEL ALFABETO DE LA PILA!");
+								isNot = false;
+								break;
+							}
+						}
+
+						if (isNot) {
+							alphabetStack.add(tfAlphabetStack.getText().charAt(0));
+							for (int i = 0; i < cbAlphabetStack.size(); i++) {
+								cbAlphabetStack.get(i).addItem(tfAlphabetStack.getText().charAt(0));
+							}
+							showAlphabetStack.setText(print(alphabetStack));
+						}
 					}
+				} catch (Exception e2) {
 				}
 			}
 		});
@@ -429,30 +436,34 @@ public class FrameMenu extends JFrame {
 		buttonInitialState.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				initialState = (String) cbInitialState.getSelectedItem();
-				showInitialState.setText(initialState);
-				buttonInitialState.setEnabled(false);
+				if (initialState != null) {
+					showInitialState.setText(initialState);
+					buttonInitialState.setEnabled(false);
+				}
 			}
 		});
 
 		buttonFinalState.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				boolean isNot = true;
-				if (finalStates.size() < 1) {
-					finalStates.add((String) cbFinalState.getSelectedItem());
-					showFinalStates.setText(print(finalStates));
-				} else {
-					for (int i = 0; i < finalStates.size(); i++) {
-						if (finalStates.get(i).equals((String) cbFinalState.getSelectedItem())) {
-							JOptionPane.showMessageDialog(null, "YA ES UN ESTADO FINAL!");
-							isNot = false;
-							break;
-						}
-					}
-
-					if (isNot) {
-						finalStates.add(tfStates.getText());
-						labelWarnings.setText("");
+				if ((String) cbFinalState.getSelectedItem() != null) {
+					boolean isNot = true;
+					if (finalStates.size() < 1) {
+						finalStates.add((String) cbFinalState.getSelectedItem());
 						showFinalStates.setText(print(finalStates));
+					} else {
+						for (int i = 0; i < finalStates.size(); i++) {
+							if (finalStates.get(i).equals((String) cbFinalState.getSelectedItem())) {
+								JOptionPane.showMessageDialog(null, "YA ES UN ESTADO FINAL!");
+								isNot = false;
+								break;
+							}
+						}
+
+						if (isNot) {
+							finalStates.add(tfStates.getText());
+							labelWarnings.setText("");
+							showFinalStates.setText(print(finalStates));
+						}
 					}
 				}
 			}
@@ -460,7 +471,7 @@ public class FrameMenu extends JFrame {
 
 		buttonInitialStack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				initialStack = tfInitialStack.getText();
+				initialStack = "" + tfInitialStack.getText().charAt(0);
 				for (int i = 0; i < cbAlphabetStack.size(); i++) {
 					cbAlphabetStack.get(i).addItem(tfInitialStack.getText().charAt(0));
 				}
@@ -472,29 +483,48 @@ public class FrameMenu extends JFrame {
 		buttonRules.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String iState = (String) cbStates.getSelectedItem();
-				Character alpha = (Character) cbAlphabetIN.getSelectedItem();
+				Character alpha = (""+cbAlphabetIN.getSelectedItem()).charAt(0);
 				ArrayList<Character> stackTop = new ArrayList<Character>();
 				ArrayList<String> action = new ArrayList<String>();
-				for(int i =0;i<cbAlphabetStack.size();i++) {
+				boolean correcto = true;
+				for (int i = 0; i < cbAlphabetStack.size(); i++) {
 					stackTop.add((Character) cbAlphabetStack.get(i).getSelectedItem());
-					action.add((String) tfstackAction.get(i).getText());
+					String accion = (String) tfstackAction.get(i).getText();
+					if(accion.equals("")) accion = "\u03BB";
+					else {
+						if(accion.charAt(accion.length()-1) == stackTop.get(i)) {
+							if(!verificarentrada(accion.substring(0,accion.length()-1),alphabetStack)) {
+								correcto = false;
+								break;
+							}
+						}else {
+							correcto = false;
+							break;
+						}
+					}
+					action.add(accion);
 				}
 				String fState = (String) cbNextState.getSelectedItem();
+				if(correcto) {
 				reglas.add(new Regla(iState, alpha, stackTop, fState, action));
 				String text = "<html>" + printRules() + "</html>";
 				showRules.setText(text);
+				}else {
+					JOptionPane.showMessageDialog(null, "Entrada erronea");
+				}
 			}
 		});
 
 		buttonSimulador.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				simulator = new FrameSimulator();
 				simulator.setvisible();
 				ArrayList<String> aux = new ArrayList<String>();
 				for (int i = 0; i < npila; i++) {
 					aux.add("" + initialStack);
 				}
+				auto.auto.estadosf = finalStates;
 				simulator.simulation(reglas, auto.auto, initialState, aux);
-
 			}
 		});
 
@@ -661,8 +691,12 @@ public class FrameMenu extends JFrame {
 					}
 				}
 				for (int i = 0; i < cbAlphabetStack.size(); i++) {
-					cbAlphabetStack.get(i).removeItem(initialStack);
-					System.out.println(tfInitialStack.getText());
+					for (int k = 0; k < cbAlphabetStack.size(); k++) {
+						if((""+cbAlphabetStack.get(i).getItemAt(k)).equals(""+initialStack)) {
+							cbAlphabetStack.get(i).removeItemAt(k);
+							break;
+						}
+					}
 					cbAlphabetStack.get(i).addItem(tfInitialStack.getText().charAt(0));
 				}
 				initialStack = tfInitialStack.getText();
@@ -820,7 +854,7 @@ public class FrameMenu extends JFrame {
 
 		}
 	}
-	
+
 	public void startthings() {
 		this.cbAlphabetStack = new ArrayList<JComboBox>();
 		this.tfstackAction = new ArrayList<TextField>();
@@ -831,12 +865,12 @@ public class FrameMenu extends JFrame {
 		setrulesize();
 		allvisible();
 	}
-	
+
 	public void setrulesize() {
-		cbNextState.setBounds(340 + (npila-1)*70, 220, 70, 20);
+		cbNextState.setBounds(340 + (npila - 1) * 70, 220, 70, 20);
 		for (int i = 0; i < cbAlphabetStack.size(); i++) {
-			cbAlphabetStack.get(i).setBounds(270 + i*70, 220, 60, 20);
-			tfstackAction.get(i).setBounds(340 + (npila)*70 +10+ i*70, 220, 60, 20);
+			cbAlphabetStack.get(i).setBounds(270 + i * 70, 220, 60, 20);
+			tfstackAction.get(i).setBounds(340 + (npila) * 70 + 10 + i * 70, 220, 60, 20);
 			frame.add(cbAlphabetStack.get(i));
 			frame.add(tfstackAction.get(i));
 		}
@@ -893,11 +927,13 @@ public class FrameMenu extends JFrame {
 		showFinalStates.setVisible(true);
 		showInitialStack.setVisible(true);
 		showRules.setVisible(true);
+		save.setEnabled(true);
 	}
 
 	public void allfalse() {
 		tfnpila.setEnabled(true);
 		buttonnpila.setEnabled(true);
+		save.setEnabled(false);
 		tfStates.setVisible(false);
 		tfAlphabetIN.setVisible(false);
 		tfAlphabetStack.setVisible(false);
@@ -949,29 +985,47 @@ public class FrameMenu extends JFrame {
 	}
 
 	public void save() {
-		Automata aux = new Automata(states, alphabetIN, alphabetStack, reglas, initialState, finalStates,
-				initialStack.charAt(0));
-		aux.nombre = tfnombre.getText();
-		aux.numerop = this.npila;
-		auto.auto = aux;
-		auto.save();
+		JFileChooser chooser = new JFileChooser();
+		chooser.setCurrentDirectory(new File("saves/"));
+		int returnVal = chooser.showSaveDialog(this);
+		if (returnVal == 0) {
+			System.out.println(chooser.getSelectedFile().getPath());
+			Automata aux = new Automata(states, alphabetIN, alphabetStack, reglas, initialState, finalStates,
+					initialStack.charAt(0));
+			aux.numerop = this.npila;
+			auto.auto = aux;
+			String path = chooser.getSelectedFile().getPath();
+			if (path.contains(".json"))
+				auto.save(path);
+			else
+				auto.save(path + ".json");
+		}
 	}
 
 	public void charge() {
-		frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-		auto.charge(tfnombre.getText());
-		npila = auto.auto.numerop;
-		alphabetIN = auto.auto.alfabetoE;
-		states = auto.auto.estados;
-		alphabetStack = auto.auto.alfabetoP;
-		reglas = auto.auto.reglas;
-		initialState = auto.auto.estadoi;
-		finalStates = auto.auto.estadosf;
-		initialStack = "" + auto.auto.initialstack;
-		addall();
-		startthings();
-		this.setComboBox();
-		this.setTexts();
+		JFileChooser chooser = new JFileChooser();
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("JSON files", "json");
+		chooser.setFileFilter(filter);
+		chooser.setCurrentDirectory(new File("saves/"));
+		int returnVal = chooser.showOpenDialog(this);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			if (auto.charge(chooser.getSelectedFile().getAbsolutePath())) {
+				frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+				npila = auto.auto.numerop;
+				tfnpila.setText("" + npila);
+				alphabetIN = auto.auto.alfabetoE;
+				states = auto.auto.estados;
+				alphabetStack = auto.auto.alfabetoP;
+				reglas = auto.auto.reglas;
+				initialState = auto.auto.estadoi;
+				finalStates = auto.auto.estadosf;
+				initialStack = "" + auto.auto.initialstack;
+				addall();
+				startthings();
+				this.setComboBox();
+				this.setTexts();
+			}
+		}
 	}
 
 	public String printRules() {
@@ -1005,5 +1059,19 @@ public class FrameMenu extends JFrame {
 			conection += cadena[i];
 		}
 		return conection;
+	}
+	
+	public boolean verificarentrada(String palabra, ArrayList<Character> alf) {
+		for (int i = 0; i < palabra.length(); i++) {
+			boolean encontrado = false;
+			for (int j = 0; j < alf.size(); j++) {
+				if(palabra.charAt(i) == alf.get(j)) {
+					encontrado = true;
+					break;
+				}
+			}
+			if(!encontrado) return false;
+		}
+		return true;
 	}
 }
