@@ -182,7 +182,7 @@ public class FrameMenu extends JFrame {
 		cbStates.setBounds(110, 220, 80, 20);
 		cbAlphabetIN.setBounds(200, 220, 60, 20);
 
-		buttonnpila.setBounds(200, 10, 60, 20);
+		buttonnpila.setBounds(200, 10, 100, 20);
 		buttonStates.setBounds(200, 40, 60, 20);
 		buttonAlphabetIN.setBounds(200, 70, 60, 20);
 		buttonAlphabetStack.setBounds(200, 100, 60, 20);
@@ -377,23 +377,25 @@ public class FrameMenu extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					boolean isNot = true;
-					if (alphabetIN.size() < 1) {
-						alphabetIN.add(tfAlphabetIN.getText().charAt(0));
-						cbAlphabetIN.addItem(tfAlphabetIN.getText().charAt(0));
-						showAlphabetIn.setText(print(alphabetIN));
-					} else {
-						for (int i = 0; i < alphabetIN.size(); i++) {
-							if (alphabetIN.get(i).toString().equals(tfAlphabetIN.getText())) {
-								JOptionPane.showMessageDialog(null, "YA ES PARTE DEL ALFABETO DE ENTRADA!");
-								isNot = false;
-								break;
-							}
-						}
-
-						if (isNot) {
+					if (tfAlphabetIN.getText().length() == 1) {
+						if (alphabetIN.size() < 1) {
 							alphabetIN.add(tfAlphabetIN.getText().charAt(0));
 							cbAlphabetIN.addItem(tfAlphabetIN.getText().charAt(0));
 							showAlphabetIn.setText(print(alphabetIN));
+						} else {
+							for (int i = 0; i < alphabetIN.size(); i++) {
+								if (alphabetIN.get(i).toString().equals(tfAlphabetIN.getText())) {
+									JOptionPane.showMessageDialog(null, "YA ES PARTE DEL ALFABETO DE ENTRADA!");
+									isNot = false;
+									break;
+								}
+							}
+
+							if (isNot) {
+								alphabetIN.add(tfAlphabetIN.getText().charAt(0));
+								cbAlphabetIN.addItem(tfAlphabetIN.getText().charAt(0));
+								showAlphabetIn.setText(print(alphabetIN));
+							}
 						}
 					}
 				} catch (Exception e1) {
@@ -405,27 +407,29 @@ public class FrameMenu extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					boolean isNot = true;
-					if (alphabetStack.size() == 0) {
-						alphabetStack.add(tfAlphabetStack.getText().charAt(0));
-						for (int i = 0; i < cbAlphabetStack.size(); i++) {
-							cbAlphabetStack.get(i).addItem(tfAlphabetStack.getText().charAt(0));
-						}
-						showAlphabetStack.setText(print(alphabetStack));
-					} else {
-						for (int i = 0; i < alphabetStack.size(); i++) {
-							if (alphabetStack.get(i).toString().equals(tfAlphabetStack.getText())) {
-								JOptionPane.showMessageDialog(null, "YA ES PARTE DEL ALFABETO DE LA PILA!");
-								isNot = false;
-								break;
-							}
-						}
-
-						if (isNot) {
+					if (tfAlphabetStack.getText().length() == 1) {
+						if (alphabetStack.size() == 0) {
 							alphabetStack.add(tfAlphabetStack.getText().charAt(0));
 							for (int i = 0; i < cbAlphabetStack.size(); i++) {
 								cbAlphabetStack.get(i).addItem(tfAlphabetStack.getText().charAt(0));
 							}
 							showAlphabetStack.setText(print(alphabetStack));
+						} else {
+							for (int i = 0; i < alphabetStack.size(); i++) {
+								if (alphabetStack.get(i).toString().equals(tfAlphabetStack.getText())) {
+									JOptionPane.showMessageDialog(null, "YA ES PARTE DEL ALFABETO DE LA PILA!");
+									isNot = false;
+									break;
+								}
+							}
+
+							if (isNot) {
+								alphabetStack.add(tfAlphabetStack.getText().charAt(0));
+								for (int i = 0; i < cbAlphabetStack.size(); i++) {
+									cbAlphabetStack.get(i).addItem(tfAlphabetStack.getText().charAt(0));
+								}
+								showAlphabetStack.setText(print(alphabetStack));
+							}
 						}
 					}
 				} catch (Exception e2) {
@@ -483,21 +487,22 @@ public class FrameMenu extends JFrame {
 		buttonRules.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String iState = (String) cbStates.getSelectedItem();
-				Character alpha = (""+cbAlphabetIN.getSelectedItem()).charAt(0);
+				Character alpha = ("" + cbAlphabetIN.getSelectedItem()).charAt(0);
 				ArrayList<Character> stackTop = new ArrayList<Character>();
 				ArrayList<String> action = new ArrayList<String>();
 				boolean correcto = true;
 				for (int i = 0; i < cbAlphabetStack.size(); i++) {
 					stackTop.add((Character) cbAlphabetStack.get(i).getSelectedItem());
 					String accion = (String) tfstackAction.get(i).getText();
-					if(accion.equals("")) accion = "\u03BB";
+					if (accion.equals(""))
+						accion = "\u03BB";
 					else {
-						if(accion.charAt(accion.length()-1) == stackTop.get(i)) {
-							if(!verificarentrada(accion.substring(0,accion.length()-1),alphabetStack)) {
+						if (accion.charAt(accion.length() - 1) == stackTop.get(i)) {
+							if (!verificarentrada(accion.substring(0, accion.length() - 1), alphabetStack)) {
 								correcto = false;
 								break;
 							}
-						}else {
+						} else {
 							correcto = false;
 							break;
 						}
@@ -505,11 +510,11 @@ public class FrameMenu extends JFrame {
 					action.add(accion);
 				}
 				String fState = (String) cbNextState.getSelectedItem();
-				if(correcto) {
-				reglas.add(new Regla(iState, alpha, stackTop, fState, action));
-				String text = "<html>" + printRules() + "</html>";
-				showRules.setText(text);
-				}else {
+				if (correcto) {
+					reglas.add(new Regla(iState, alpha, stackTop, fState, action));
+					String text = "<html>" + printRules() + "</html>";
+					showRules.setText(text);
+				} else {
 					JOptionPane.showMessageDialog(null, "Entrada erronea");
 				}
 			}
@@ -693,8 +698,8 @@ public class FrameMenu extends JFrame {
 					}
 				}
 				for (int i = 0; i < cbAlphabetStack.size(); i++) {
-					for (int k = 0; k < cbAlphabetStack.size(); k++) {
-						if((""+cbAlphabetStack.get(i).getItemAt(k)).equals(""+initialStack)) {
+					for (int k = 0; k < cbAlphabetStack.get(i).getItemCount(); k++) {
+						if (("" + cbAlphabetStack.get(i).getItemAt(k)).equals("" + initialStack)) {
 							cbAlphabetStack.get(i).removeItemAt(k);
 							break;
 						}
@@ -849,7 +854,9 @@ public class FrameMenu extends JFrame {
 		if (tfnpila.getText().length() >= 1) {
 			try {
 				this.npila = Integer.parseInt(tfnpila.getText());
-				startthings();
+				if (npila >= 1) {
+					startthings();
+				}
 			} catch (Exception e) {
 			}
 		} else {
@@ -1062,17 +1069,18 @@ public class FrameMenu extends JFrame {
 		}
 		return conection;
 	}
-	
+
 	public boolean verificarentrada(String palabra, ArrayList<Character> alf) {
 		for (int i = 0; i < palabra.length(); i++) {
 			boolean encontrado = false;
 			for (int j = 0; j < alf.size(); j++) {
-				if(palabra.charAt(i) == alf.get(j)) {
+				if (palabra.charAt(i) == alf.get(j)) {
 					encontrado = true;
 					break;
 				}
 			}
-			if(!encontrado) return false;
+			if (!encontrado)
+				return false;
 		}
 		return true;
 	}
