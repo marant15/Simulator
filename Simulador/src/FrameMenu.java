@@ -524,6 +524,8 @@ public class FrameMenu extends JFrame {
 					aux.add("" + initialStack);
 				}
 				auto.auto.estadosf = finalStates;
+				auto.auto.alfabetoE = alphabetIN;
+				auto.auto.alfabetoP = alphabetStack;
 				simulator.simulation(reglas, auto.auto, initialState, aux);
 			}
 		});
