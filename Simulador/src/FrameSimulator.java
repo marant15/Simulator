@@ -14,8 +14,8 @@ public class FrameSimulator {
 	TextField tfWord;
 	Simulator sim;
 	Container contenedor;
-	JTable pila;
-	DefaultTableModel modelo;
+	ArrayList<JTable> pila;
+	ArrayList<DefaultTableModel> modelo;
 	
 	public FrameSimulator() {
 		frame=new JFrame();
@@ -29,17 +29,8 @@ public class FrameSimulator {
 		contenedor.regla= new JLabel("");
 		contenedor.estado= new JLabel("");
 		labelWord = new JLabel("Write Word");
-		
-		modelo = new DefaultTableModel(){
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return false;
-			}
-		};
-		
-		pila = new JTable(modelo);
-		modelo.setRowCount(12);
-		modelo.setColumnCount(1);
+		pila = new ArrayList<JTable>();
+		modelo = new ArrayList<DefaultTableModel>();
 		
 		start = new JButton("Start");
 		
@@ -54,7 +45,6 @@ public class FrameSimulator {
 		contenedor.response.setBounds(10,300,300, 40);
 		contenedor.response.setVisible(false);
 		start.setBounds(270,10,100, 20);
-		pila.setBounds(350,150, 40,190);
 		
 		
 		frame.add(tfWord);
@@ -66,7 +56,6 @@ public class FrameSimulator {
 		frame.add(contenedor.regla);
 		frame.add(contenedor.estado);
 		frame.add(start);
-		frame.add(pila);
 		frame.setSize(500,600);
 		frame.setLayout(null);  
 		frame.setVisible(false);
@@ -79,8 +68,7 @@ public class FrameSimulator {
 				auto.reglas = reglas;
 				sim = new Simulator(auto,contenedor);
 				sim.cadena = palabra;
-				
-				
+				anadir();
 				boolean estado = sim.verificar(palabra,pila,estadoI);
 				if(estado) {
 					contenedor.response.setText("Palabra Aceptada");
@@ -92,7 +80,22 @@ public class FrameSimulator {
 	        }  
 	    });
 	}
-	
+	public void anadir() {
+		for (int i = 0; i < sim.automata.numerop; i++) {
+			modelo.add(new DefaultTableModel(){
+				@Override
+				public boolean isCellEditable(int row, int column) {
+					return false;
+				}
+			});
+			pila.add(new JTable(modelo.get(i)));
+			modelo.get(i).setRowCount(12);
+			modelo.get(i).setColumnCount(1);
+			pila.get(i).setBounds(350+50*i,150, 40,190);
+			frame.add(pila.get(i));
+		}
+		
+	}
 	public void simular() {
 		Runnable caller = new Runnable() {
 		    @Override
@@ -111,16 +114,17 @@ public class FrameSimulator {
 			contenedor.cintaL.setText(sim.steps.get(i).cintaL);
 			contenedor.regla.setText(sim.steps.get(i).regla);
 			contenedor.estado.setText(sim.steps.get(i).estado);
-			for (int j = 0; j < 12; j++) {
-				modelo.setValueAt("", j, 0);
+			for (int k = 0; k < sim.automata.numerop; k++) {
+				for (int j = 0; j < 12; j++) {
+					modelo.get(k).setValueAt("", j, 0);
+				}
+				int count = 1;
+				if(sim.steps.get(i).pila.get(k).length() > 12) count = 12;
+				else count = sim.steps.get(i).pila.get(k).length();
+				for (int j = 0; j < sim.steps.get(i).pila.get(k).length() && j <12; j++) {
+					modelo.get(k).setValueAt(sim.steps.get(i).pila.get(k).charAt(sim.steps.get(i).pila.get(k).length()-1-j), 12-count+j, 0);
+				}
 			}
-			int count = 1;
-			if(sim.steps.get(i).pila.get(0).length() > 12) count = 12;
-			else count = sim.steps.get(i).pila.get(0).length();
-			for (int j = 0; j < sim.steps.get(i).pila.get(0).length() && j <12; j++) {
-				modelo.setValueAt(sim.steps.get(i).pila.get(0).charAt(sim.steps.get(i).pila.get(0).length()-1-j), 12-count+j, 0);
-			}
-			
 			try {
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {

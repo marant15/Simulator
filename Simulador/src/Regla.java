@@ -16,6 +16,6 @@ public class Regla {
 	}
 	
 	public String toString() {
-		return "<"+estadoi+", "+entrada+", "+estadof+", "+tope+", "+accion+">";
+		return "<"+estadoi+", "+entrada+", "+estadof+", "+tope.toString()+", "+accion.toString()+">";
 	}
 }
