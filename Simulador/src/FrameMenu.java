@@ -62,7 +62,6 @@ public class FrameMenu extends JFrame {
 	JButton buttonEAlphabetStack;
 	JButton buttonEInitialState;
 	JButton buttonEInitialStack;
-	JButton buttonERules;
 
 	JButton buttonnpila;
 	JButton buttonDStates;
@@ -141,7 +140,6 @@ public class FrameMenu extends JFrame {
 		buttonEAlphabetStack = new JButton("Edit");
 		buttonEInitialState = new JButton("Edit");
 		buttonEInitialStack = new JButton("Edit");
-		buttonERules = new JButton("Edit Rule");
 
 		buttonDStates = new JButton("Delete");
 		buttonDAlphabetIN = new JButton("Delete");
@@ -197,7 +195,6 @@ public class FrameMenu extends JFrame {
 		buttonEAlphabetStack.setBounds(260, 100, 60, 20);
 		buttonEInitialState.setBounds(260, 130, 60, 20);
 		buttonEInitialStack.setBounds(260, 190, 60, 20);
-		buttonERules.setBounds(220, 250, 100, 20);
 
 		buttonDStates.setBounds(320, 40, 70, 20);
 		buttonDAlphabetIN.setBounds(320, 70, 70, 20);
@@ -266,7 +263,6 @@ public class FrameMenu extends JFrame {
 		frame.add(buttonEAlphabetStack);
 		frame.add(buttonEInitialState);
 		frame.add(buttonEInitialStack);
-		frame.add(buttonERules);
 
 		frame.add(buttonDStates);
 		frame.add(buttonDAlphabetIN);
@@ -713,11 +709,6 @@ public class FrameMenu extends JFrame {
 			}
 		});
 
-		buttonERules.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-
 		buttonDStates.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (states.size() < 1) {
@@ -831,6 +822,11 @@ public class FrameMenu extends JFrame {
 		});
 		buttonDRules.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(reglas.size()>=1) {
+					reglas.remove(reglas.size()-1);
+					setTexts();
+				}
+				
 			}
 		});
 		save.addActionListener(new ActionListener() {
@@ -915,7 +911,6 @@ public class FrameMenu extends JFrame {
 		buttonEAlphabetStack.setVisible(true);
 		buttonEInitialState.setVisible(true);
 		buttonEInitialStack.setVisible(true);
-		buttonERules.setVisible(true);
 		buttonDStates.setVisible(true);
 		buttonDAlphabetIN.setVisible(true);
 		buttonDAlphabetStack.setVisible(true);
@@ -961,7 +956,6 @@ public class FrameMenu extends JFrame {
 		buttonEAlphabetStack.setVisible(false);
 		buttonEInitialState.setVisible(false);
 		buttonEInitialStack.setVisible(false);
-		buttonERules.setVisible(false);
 		buttonDStates.setVisible(false);
 		buttonDAlphabetIN.setVisible(false);
 		buttonDAlphabetStack.setVisible(false);
